@@ -3,7 +3,7 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color: #333;
+  color: #3A6FF7;
   background-color: #ffffff;
 
   font-synthesis: none;
@@ -31,7 +31,7 @@ body {
 }
 
 a {
-  color: #4a90e2;
+  color: #3A6FF7;
   text-decoration: none;
 }
 
@@ -54,14 +54,14 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
+    color: #3A6FF7;
     background-color: #ffffff;
   }
   a:hover {
-    color: #747bff;
+    color: #2857d6;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: #F36D63;
   }
 }
 

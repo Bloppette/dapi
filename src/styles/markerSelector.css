@@ -60,13 +60,13 @@
   margin: 0 0 4px 0;
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: #3A6FF7;
 }
 
 .marker-selector__subtitle {
   margin: 0;
   font-size: 12px;
-  color: #999;
+  color: #3A6FF7;
   font-style: italic;
 }
 
@@ -91,7 +91,7 @@
   transition: all 0.2s ease;
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: #3A6FF7;
   flex: 1;
   min-width: 150px;
   justify-content: center;
@@ -136,8 +136,8 @@
 }
 
 .marker-selector__input:focus {
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  border-color: #3A6FF7;
+  box-shadow: 0 0 0 3px rgba(58, 111, 247, 0.1);
 }
 
 .marker-selector__actions {
@@ -159,13 +159,13 @@
 }
 
 .marker-selector__button--confirm {
-  background-color: #7ed321;
+  background-color: #F36D63;
   color: white;
 }
 
 .marker-selector__button--confirm:hover {
-  background-color: #6bc41e;
-  box-shadow: 0 2px 8px rgba(126, 211, 33, 0.3);
+  background-color: #e14d42;
+  box-shadow: 0 2px 8px rgba(243, 109, 99, 0.3);
 }
 
 .marker-selector__button--cancel {

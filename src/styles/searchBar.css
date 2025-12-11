@@ -65,13 +65,13 @@
 }
 
 .search-bar__button--search {
-  background-color: #4a90e2;
+  background-color: #F36D63;
   color: white;
   flex: 1;
 }
 
 .search-bar__button--search:hover:not(:disabled) {
-  background-color: #357abd;
+  background-color: #e14d42;
 }
 
 .search-bar__button--reset {
@@ -88,7 +88,7 @@
 .search-bar__info {
   padding: 0 16px 12px 16px;
   font-size: 12px;
-  color: #999;
+  color: #3A6FF7;
   background-color: #fafafa;
   border-top: 1px solid #f0f0f0;
   line-height: 1.4;

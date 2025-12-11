@@ -3,7 +3,7 @@ import axios from 'axios';
 // API OSRM pour le routage par les rues (gratuit et open source)
 const OSRM_BASE_URL = 'https://router.project-osrm.org/route/v1/car';
 // Alternative OSRM en cas de problème
-const OSRM_ALTERNATIVE_URL = 'https://routing.openstreetmap.de/routed-osrm/car/route/v1/driving';
+const OSRM_ALTERNATIVE_URL = 'https://routing.openstreetmap.de/routed-car/route/v1/car';
 
 // API Nominatim pour le géocodage (gratuit)
 const NOMINATIM_GEOCODE_URL = 'https://nominatim.openstreetmap.org/search';
@@ -45,8 +45,11 @@ export const geocodeAddress = async (address) => {
  */
 const calculateRouteWithOSRM = async (url, start, end) => {
   const coordinates = `${start.longitude},${start.latitude};${end.longitude},${end.latitude}`;
+  const fullUrl = `${url}/${coordinates}`;
 
-  const response = await axios.get(`${url}/${coordinates}`, {
+  console.log('📡 Requête OSRM:', fullUrl);
+
+  const response = await axios.get(fullUrl, {
     params: {
       overview: 'full',
       geometries: 'geojson',
@@ -54,8 +57,10 @@ const calculateRouteWithOSRM = async (url, start, end) => {
       continue_straight: false,
       alternatives: false,
     },
-    timeout: 15000,
+    timeout: 20000, // Augmenté à 20 secondes
   });
+
+  console.log('📦 Réponse OSRM reçue:', response.status, response.data?.code);
 
   if (response.data && response.data.routes && response.data.routes.length > 0) {
     const route = response.data.routes[0];
@@ -68,6 +73,8 @@ const calculateRouteWithOSRM = async (url, start, end) => {
     const durationMinutes = Math.round(route.duration / 60);
     const distanceKm = (route.distance / 1000).toFixed(1);
 
+    console.log('✅ Route calculée:', distanceKm + 'km,', durationMinutes + 'min,', geometry.length + 'points');
+
     return {
       distance: parseFloat(distanceKm),
       duration: durationMinutes,
@@ -77,7 +84,7 @@ const calculateRouteWithOSRM = async (url, start, end) => {
     };
   }
 
-  throw new Error('Aucune route trouvée');
+  throw new Error('Aucune route trouvée dans la réponse');
 };
 
 /**
@@ -93,29 +100,37 @@ export const calculateRoute = async (start, end) => {
       throw new Error('Coordonnées invalides');
     }
 
+    console.log('🗺️ Calcul itinéraire:', {
+      start: `${start.latitude},${start.longitude}`,
+      end: `${end.latitude},${end.longitude}`
+    });
+
     // Essayer le serveur OSRM principal
     try {
       console.log('🚀 Tentative OSRM principal...');
       const result = await calculateRouteWithOSRM(OSRM_BASE_URL, start, end);
-      console.log('✓ Itinéraire OSRM réussi (principal)');
+      console.log('✅ Itinéraire OSRM réussi (principal)');
       return result;
     } catch (osrmMainError) {
-      console.warn('⚠️ OSRM principal échoué, tentative alternative:', osrmMainError.message);
+      console.error('❌ OSRM principal échoué:', osrmMainError.message);
+      console.error('Détails erreur:', osrmMainError.response?.status, osrmMainError.response?.data);
 
       // Essayer le serveur OSRM alternatif
       try {
         console.log('🚀 Tentative OSRM alternative...');
         const result = await calculateRouteWithOSRM(OSRM_ALTERNATIVE_URL, start, end);
-        console.log('✓ Itinéraire OSRM réussi (alternative)');
+        console.log('✅ Itinéraire OSRM réussi (alternative)');
         return result;
       } catch (osrmAltError) {
-        console.warn('⚠️ OSRM alternatif échoué, utilisation du fallback:', osrmAltError.message);
+        console.error('❌ OSRM alternatif échoué:', osrmAltError.message);
+        console.error('Détails erreur:', osrmAltError.response?.status, osrmAltError.response?.data);
+        console.warn('⚠️ FALLBACK: Utilisation d\'un trajet en ligne droite');
         return calculateRouteFallback(start, end);
       }
     }
 
   } catch (error) {
-    console.error('Erreur lors du calcul de l\'itinéraire:', error);
+    console.error('💥 Erreur fatale lors du calcul de l\'itinéraire:', error);
     throw error;
   }
 };

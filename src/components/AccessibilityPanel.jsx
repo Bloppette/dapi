@@ -30,19 +30,17 @@ const AccessibilityPanel = ({ onSettingsClick, onAddMarker }) => {
 
   return (
     <div className="accessibility-panel">
-      {/* Bouton burger */}
+      {/* Bouton d'alerte/exclamation */}
       <button
-        className={`accessibility-panel__burger ${
-          isExpanded ? 'accessibility-panel__burger--active' : ''
+        className={`accessibility-panel__alert-button ${
+          isExpanded ? 'accessibility-panel__alert-button--active' : ''
         }`}
         onClick={() => setIsExpanded(!isExpanded)}
-        title="Ouvrir le menu"
-        aria-label="Menu des raccourcis"
+        title="Signaler un obstacle"
+        aria-label="Menu de signalement"
         aria-expanded={isExpanded}
       >
-        <span></span>
-        <span></span>
-        <span></span>
+        <span className="accessibility-panel__alert-icon">!</span>
       </button>
 
       {/* Menu déroulant */}

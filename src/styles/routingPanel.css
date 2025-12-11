@@ -33,7 +33,7 @@
 .routing-panel__placeholder {
   padding: 20px;
   text-align: center;
-  color: #999;
+  color: #3A6FF7;
   font-size: 14px;
   line-height: 1.6;
 }
@@ -50,7 +50,7 @@
 .routing-panel__header h2 {
   margin: 0;
   font-size: 18px;
-  color: #333;
+  color: #3A6FF7;
   font-weight: 600;
 }
 
@@ -97,7 +97,7 @@
 }
 
 .routing-panel__location-value {
-  color: #333;
+  color: #3A6FF7;
   font-weight: 500;
   word-break: break-word;
   line-height: 1.4;
@@ -106,7 +106,7 @@
 .routing-panel__loading {
   padding: 20px;
   text-align: center;
-  color: #4a90e2;
+  color: #3A6FF7;
   font-size: 14px;
   animation: pulse 1.5s ease-in-out infinite;
 }
