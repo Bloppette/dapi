@@ -4,9 +4,9 @@ import SearchBar from './components/SearchBar';
 import RoutingPanel from './components/RoutingPanel';
 import FilterBar from './components/FilterBar';
 import AccessibilityPanel from './components/AccessibilityPanel';
-import MarkerSelector from './components/MarkerSelector';
-import { getPMRByCommune, getAllPMRLocations, formatPMRData } from './services/pmrService';
-import { geocodeAddress } from './services/routingService';
+import ElementTypePanel from './components/ElementTypePanel';
+import { getPMRByCommune, getAllPMRLocations, formatPMRData } from './services/index.js';
+import { geocodeAddress } from './services/index.js';
 import { findPMRAlongRoute } from './services/pmrProximityService';
 import {
     createMarker,
@@ -83,8 +83,9 @@ function App() {
     const [showRoutingPanel, setShowRoutingPanel] = useState(false);
     const [pmrNearbyRoute, setPMRNearbyRoute] = useState([]);
     const [customMarkers, setCustomMarkers] = useState([]);
-    const [showMarkerSelector, setShowMarkerSelector] = useState(false);
+    const [showElementTypePanel, setShowElementTypePanel] = useState(false);
     const [pendingMarkerType, setPendingMarkerType] = useState(null);
+    const [showPlacementHint, setShowPlacementHint] = useState(false);
 
     useEffect(() => {
         loadPMRLocations();
@@ -152,14 +153,13 @@ function App() {
             }
             setEndLocation(endGeo);
 
-            // ✅ Utiliser OSRM public (sans clé API, sans CORS)
             const routeData = await calculateRouteWithOSRM(startGeo, endGeo);
 
             setRoute(routeData);
             setRoutePath(routeData.geometry);
 
             console.log('✅ Trajet calculé rue par rue:', {
-                distance: `${(routeData.distance / 1000).toFixed(2)} km`,
+                distance: `${routeData.distance.toFixed(2)} m`,
                 duree: `${Math.round(routeData.duration / 60)} min`,
                 points: routeData.geometry.length
             });
@@ -196,23 +196,26 @@ function App() {
             saveMarkersToLocalStorage(updatedMarkers);
 
             setPendingMarkerType(null);
-            setShowMarkerSelector(false);
+            setShowElementTypePanel(false);
+            setShowPlacementHint(false);
         }
     };
 
-    const handleMarkerTypeSelected = (type) => {
-        console.log('🎯 Type sélectionné:', type);
+    const handleSelectElementType = (type) => {
+        console.log('🎯 Type d\'élément sélectionné:', type);
         setPendingMarkerType(type);
+        setShowElementTypePanel(false);
+        setShowPlacementHint(true);
     };
 
-
-    const handleShowMarkerSelector = () => {
-        setShowMarkerSelector(true);
+    const handleShowElementTypePanel = () => {
+        setShowElementTypePanel(true);
     };
 
-    const handleCloseMarkerSelector = () => {
-        setShowMarkerSelector(false);
+    const handleCloseElementTypePanel = () => {
+        setShowElementTypePanel(false);
         setPendingMarkerType(null);
+        setShowPlacementHint(false);
     };
 
     const handleCustomMarkerClick = (marker) => {
@@ -269,6 +272,13 @@ function App() {
                     ⚠️ {error}
                 </div>
             )}
+
+            {showPlacementHint && (
+                <div className="app__placement-hint">
+                    📍 Cliquez sur la carte pour placer votre signalement
+                </div>
+            )}
+
             <Map
                 pmrLocations={visiblePMRLocations}
                 startLocation={startLocation}
@@ -279,18 +289,21 @@ function App() {
                 onMapClick={handleMapClick}
                 onCustomMarkerClick={handleCustomMarkerClick}
             />
+
             <SearchBar
                 onSearch={handleSearch}
                 isLoading={isLoading}
                 startLocation={startLocation}
                 endLocation={endLocation}
             />
+
             <FilterBar
                 activeFilter={activeFilter}
                 onFilterChange={handleFilterChange}
                 onPMRToggle={handlePMRToggle}
                 showPMR={showPMR}
             />
+
             {showRoutingPanel && (
                 <RoutingPanel
                     startLocation={startLocation}
@@ -303,16 +316,18 @@ function App() {
                     onShowPMRNearby={handleShowPMRNearby}
                 />
             )}
+
             <AccessibilityPanel
                 onSettingsClick={handleAccessibilitySettings}
-                onAddMarker={handleShowMarkerSelector}
+                onAddMarker={handleShowElementTypePanel}
             />
 
-            <MarkerSelector
-                onMarkerTypeSelected={handleMarkerTypeSelected}
-                isActive={showMarkerSelector}
-                onClose={handleCloseMarkerSelector}
-            />
+            {showElementTypePanel && (
+                <ElementTypePanel
+                    onSelectType={handleSelectElementType}
+                    onClose={handleCloseElementTypePanel}
+                />
+            )}
         </div>
     );
 }

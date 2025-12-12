@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
+import React, { useEffect, useState, useRef } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import '../styles/map.css';
 import PMRMarkerPopup from './PMRMarkerPopup';
-import MapClickHandler from './MapClickHandler';
 
 // Désactiver les avertissements de Leaflet sur MouseEvent obsolète
 if (typeof window !== 'undefined') {
@@ -110,6 +109,27 @@ const createCustomMarkerIcon = (marker) => {
 };
 
 /**
+ * Composant pour gérer les clics sur la carte
+ */
+const MapClickHandler = ({ onMapClick }) => {
+    useMapEvents({
+        click: (e) => {
+            const { lat, lng } = e.latlng;
+            console.log('🗺️ Clic capturé sur la carte:', { lat, lng });
+
+            if (onMapClick) {
+                onMapClick({
+                    latitude: lat,
+                    longitude: lng
+                });
+            }
+        }
+    });
+
+    return null;
+};
+
+/**
  * Composant pour ajuster les limites de la carte
  */
 const MapBoundsUpdater = ({ startLocation, endLocation, pmrLocations }) => {
@@ -153,6 +173,7 @@ const Map = ({
              }) => {
     const [center] = useState([47.2173, -1.5534]); // Nantes
     const [zoom] = useState(13);
+    const mapRef = useRef(null);
 
     return (
         <div className="map-container">
@@ -160,15 +181,19 @@ const Map = ({
                 center={center}
                 zoom={zoom}
                 className="map"
+                ref={mapRef}
             >
+                {/* Gestionnaire de clics */}
                 <MapClickHandler onMapClick={onMapClick} />
 
+                {/* Ajustement automatique des limites */}
                 <MapBoundsUpdater
                     startLocation={startLocation}
                     endLocation={endLocation}
                     pmrLocations={pmrLocations}
                 />
 
+                {/* Tuiles de la carte */}
                 <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -251,7 +276,7 @@ const Map = ({
                     </Marker>
                 ))}
 
-                {/* Trajet rue par rue (pas à vol d'oiseau) */}
+                {/* Trajet rue par rue */}
                 {routePath && routePath.length > 1 && (
                     <Polyline
                         positions={routePath}

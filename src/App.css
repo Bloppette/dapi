@@ -55,6 +55,44 @@ html {
   }
 }
 
+.app__placement-hint {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  z-index: 1000;
+  animation: bounceIn 0.5s ease-out;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -20px) scale(0.9);
+  }
+  50% {
+    transform: translate(-50%, 5px) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* Styles responsifs */
 @media (max-width: 768px) {
   .app {
@@ -73,3 +111,4 @@ html {
     font-size: 12px;
   }
 }
+

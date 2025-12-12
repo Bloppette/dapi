@@ -7,32 +7,53 @@
  * Types de marqueurs disponibles
  */
 export const MARKER_TYPES = {
+  BARRIER: 'barrier',
   BENCH: 'bench',
-  CAR: 'car',
-  TRASH: 'trash',
+  STAIRS: 'stairs',
+  TOILET: 'toilet',
+  VEHICLE: 'vehicle',
+  BUILDING: 'building',
 };
 
 /**
  * Configuration des types de marqueurs
  */
 export const MARKER_CONFIG = {
+  [MARKER_TYPES.BARRIER]: {
+    label: 'Barrière de travaux',
+    icon: '🚧',
+    color: '#ff9800',
+    description: 'Travaux / Passage bloqué',
+  },
   [MARKER_TYPES.BENCH]: {
     label: 'Banc',
     icon: '🪑',
     color: '#4a90e2',
     description: 'Point de repos / Passage difficile',
   },
-  [MARKER_TYPES.CAR]: {
-    label: 'Voiture mal garée',
-    icon: '🚗',
-    color: '#ff6b6b',
-    description: 'Obstacle / Passage bloqué',
+  [MARKER_TYPES.STAIRS]: {
+    label: 'Escaliers',
+    icon: '🪜',
+    color: '#9c27b0',
+    description: 'Obstacle / Passage difficile',
   },
-  [MARKER_TYPES.TRASH]: {
-    label: 'Poubelle',
-    icon: '🗑️',
-    color: '#f5a623',
-    description: 'Obstacle / Encombrement',
+  [MARKER_TYPES.TOILET]: {
+    label: 'Toilettes',
+    icon: '🚻',
+    color: '#00bcd4',
+    description: 'Point d\'intérêt',
+  },
+  [MARKER_TYPES.VEHICLE]: {
+    label: 'Véhicule gênant',
+    icon: '🚗',
+    color: '#e91e63',
+    description: 'Véhicule mal garé / Obstacle',
+  },
+  [MARKER_TYPES.BUILDING]: {
+    label: 'Bâtiment',
+    icon: '🏢',
+    color: '#607d8b',
+    description: 'Point d\'intérêt',
   },
 };
 
