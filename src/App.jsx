@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Map from './components/Map';
 import SearchBar from './components/SearchBar';
 import RoutingPanel from './components/RoutingPanel';
@@ -87,11 +87,39 @@ function App() {
     const [pendingMarkerType, setPendingMarkerType] = useState(null);
     const [showPlacementHint, setShowPlacementHint] = useState(false);
 
+    const loadPMRByNantes = useCallback(async () => {
+        try {
+            setIsLoading(true);
+            const data = await getPMRByCommune('Nantes');
+            const formatted = formatPMRData(data);
+            setPMRLocations(formatted);
+        } catch (error) {
+            console.error('Erreur lors du chargement des places PMR de Nantes:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+
+    const loadPMRLocations = useCallback(async () => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const data = await getAllPMRLocations();
+            const formatted = formatPMRData(data);
+            setPMRLocations(formatted);
+        } catch (error) {
+            console.error('Erreur lors du chargement des places PMR:', error);
+            await loadPMRByNantes();
+        } finally {
+            setIsLoading(false);
+        }
+    }, [loadPMRByNantes]);
+
     useEffect(() => {
         loadPMRLocations();
         const savedMarkers = getMarkersFromLocalStorage();
         setCustomMarkers(savedMarkers);
-    }, []);
+    }, [loadPMRLocations]);
 
     useEffect(() => {
         if (route && routePath) {
@@ -107,34 +135,6 @@ function App() {
             setPMRNearbyRoute([]);
         }
     }, [routePath, pmrLocations]);
-
-    const loadPMRLocations = async () => {
-        try {
-            setIsLoading(true);
-            setError(null);
-            const data = await getAllPMRLocations();
-            const formatted = formatPMRData(data);
-            setPMRLocations(formatted);
-        } catch (error) {
-            console.error('Erreur lors du chargement des places PMR:', error);
-            loadPMRByNantes();
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const loadPMRByNantes = async () => {
-        try {
-            setIsLoading(true);
-            const data = await getPMRByCommune('Nantes');
-            const formatted = formatPMRData(data);
-            setPMRLocations(formatted);
-        } catch (error) {
-            console.error('Erreur lors du chargement des places PMR de Nantes:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const handleSearch = async (addresses) => {
         try {

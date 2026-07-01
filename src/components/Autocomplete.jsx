@@ -1,6 +1,5 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getAutocompleteSuggestions } from '../services/autocompleteService';
-import { debounce } from '../utils/animations';
 import '../styles/autocomplete.css';
 
 /**
@@ -20,10 +19,9 @@ const Autocomplete = ({
   const [isLoading, setIsLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
-  // Debounce la fonction de recherche pour éviter trop de requêtes API
-  const fetchSuggestions = useCallback(
-    debounce(async (query) => {
-      if (!query || query.length < 2) {
+  useEffect(() => {
+    const timeoutId = setTimeout(async () => {
+      if (!value || value.length < 2) {
         setSuggestions([]);
         setIsOpen(false);
         return;
@@ -31,7 +29,7 @@ const Autocomplete = ({
 
       setIsLoading(true);
       try {
-        const results = await getAutocompleteSuggestions(query);
+        const results = await getAutocompleteSuggestions(value);
         setSuggestions(results);
         setIsOpen(results.length > 0);
         setSelectedIndex(-1);
@@ -41,14 +39,10 @@ const Autocomplete = ({
       } finally {
         setIsLoading(false);
       }
-    }, 300), // Attendre 300ms après la dernière saisie
-    []
-  );
+    }, 300);
 
-  // Mettre à jour les suggestions quand la valeur change
-  useEffect(() => {
-    fetchSuggestions(value);
-  }, [value, fetchSuggestions]);
+    return () => clearTimeout(timeoutId);
+  }, [value]);
 
   const handleInputChange = (e) => {
     onChange(e.target.value);
@@ -197,4 +191,3 @@ const Autocomplete = ({
 };
 
 export default Autocomplete;
-

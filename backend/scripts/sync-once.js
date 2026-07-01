@@ -18,7 +18,7 @@ async function waitForBackend() {
       await axios.get(`${API_BASE_URL}/`);
       console.log('Backend prêt !');
       return;
-    } catch (error) {
+    } catch {
       retries--;
       console.log(`Encore ${retries} essais restants...`);
       await new Promise(resolve => setTimeout(resolve, 2000));

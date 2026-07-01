@@ -7,6 +7,15 @@ import '../styles/accessibilityPanel.css';
 const AccessibilityPanel = ({ onSettingsClick, onAddMarker }) => {
     return (
         <div className="accessibility-panel">
+            <button
+                className="accessibility-panel__settings-button"
+                onClick={onSettingsClick}
+                title="Paramètres d'accessibilité"
+                aria-label="Paramètres d'accessibilité"
+            >
+                <span className="accessibility-panel__settings-icon">⚙</span>
+            </button>
+
             {/* Bouton d'alerte/exclamation */}
             <button
                 className="accessibility-panel__alert-button"

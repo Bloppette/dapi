@@ -1,0 +1,42 @@
+services:
+  db:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+        - MYSQL_ROOT_PASSWORD=root
+        - MYSQL_USER=dapi
+        - MYSQL_DATABASE=dapi_pmr
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - dapi-network
+
+  back:
+    build: backend
+    ports:
+      - "3001:3001"
+    environment:
+      DB_HOST: db
+      DB_USER: dapi
+      DB_PASSWORD: root
+      DB_NAME: dapi_pmr
+    networks:
+      - dapi-network
+
+  front:
+    build:
+      context: .
+      dockerfile:  Dockerfile.frontend
+    ports:
+      - "8080:80"
+    networks:
+      - dapi-network
+
+networks:
+  dapi-network:
+    name: dapi-network
+    driver: bridge
+
+volumes:
+  db_data:

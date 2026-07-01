@@ -44,25 +44,11 @@ export const throttle = (func, limit = 300) => {
  * @param {number} duration - Durée de l'animation en ms
  * @returns {Promise} - Promise qui se résout après l'animation
  */
-export const animateZoom = (currentZoom, targetZoom, duration = 300) => {
+export const animateZoom = (_currentZoom, targetZoom, duration = 300) => {
   return new Promise((resolve) => {
-    const startTime = Date.now();
-    const difference = targetZoom - currentZoom;
-
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easeProgress = easeInOutCubic(progress);
-      const currentValue = currentZoom + difference * easeProgress;
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        resolve(targetZoom);
-      }
-    };
-
-    requestAnimationFrame(animate);
+    window.setTimeout(() => {
+      resolve(targetZoom);
+    }, duration);
   });
 };
 
@@ -133,4 +119,3 @@ export const accessibleAnimate = (start, end, duration, callback) => {
 
   return animateValue(start, end, duration, callback);
 };
-
