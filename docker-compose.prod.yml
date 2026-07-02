@@ -1,0 +1,42 @@
+services:
+  dapi:
+    image: ghcr.io/bloppette/dapi:latest
+    container_name: dapi-app
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - dapi-network
+      - public_network
+
+  db:
+    image: postgres:17-alpine
+    container_name: dapi-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dapi
+      POSTGRES_PASSWORD: dapi
+      POSTGRES_DB: dapi
+    volumes:
+      - dapi_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dapi -d dapi"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dapi-network
+
+networks:
+  default:
+    name: dapi-network
+    driver: bridge
+  public_network:
+    name: public_network
+    external: true
+
+volumes:
+  dapi_pgdata:

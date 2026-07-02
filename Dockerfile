@@ -1,4 +1,5 @@
 ARG NODE_VERSION=24.13.0-slim
+ARG NGINX_VERSION=1.27-alpine
 FROM node:${NODE_VERSION} AS build
 
 WORKDIR /app
@@ -9,7 +10,7 @@ RUN npm install --no-audit --no-fund
 COPY . .
 RUN npm run build
 
-FROM nginx:1.27-alpine
+FROM nginx:${NGINX_VERSION}
 
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
