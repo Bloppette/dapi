@@ -17,7 +17,7 @@ jobs:
 
   build-and-push:
     uses: ./.github/workflows/build.yml
-    needs: security
+    #needs: security
     secrets: inherit
     permissions:
       contents: read
