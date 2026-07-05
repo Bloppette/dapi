@@ -3,7 +3,7 @@ name: Build and Deploy DAPI Application
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
 
 env:
