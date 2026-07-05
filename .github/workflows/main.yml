@@ -31,10 +31,10 @@ jobs:
       contents: read
       packages: read
 
-  # deploy:
-  #   uses: ./.github/workflows/deploy.yml
-  #   needs: build-and-push
-  #   secrets: inherit
-  #   permissions:
-  #     contents: read
-  #     packages: read
+  deploy:
+    uses: ./.github/workflows/deploy.yml
+    needs: build-and-push
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: read
