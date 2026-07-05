@@ -183,7 +183,7 @@ const Autocomplete = ({
 
       {isOpen && suggestions.length === 0 && value.length >= 2 && !isLoading && (
         <div className="autocomplete__no-results">
-          Aucun résultat pour "{value}"
+          Aucun résultat pour &quot;{value}&quot;
         </div>
       )}
     </div>

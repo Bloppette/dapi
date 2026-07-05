@@ -20,7 +20,7 @@ const RoutingPanel = ({ route, isLoading, onClose }) => {
 
       {isLoading && (
         <div className="routing-panel__loading">
-          Calcul de l'itinéraire...
+          Calcul de l&apos;itinéraire...
         </div>
       )}
 
