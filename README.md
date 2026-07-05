@@ -95,8 +95,8 @@ Avant de lancer le projet, assurez-vous d'avoir :
    ```
 
 6. Ouvrez les services :
-   - Frontend : http://localhost:3001
-   - Backend : http://localhost:3002
+   - Frontend : http://localhost:3002
+   - Backend : http://localhost:3001
    - Base de données : localhost:5432
 
 7. Pour arrêter la stack :
